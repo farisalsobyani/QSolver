@@ -68,10 +68,14 @@ usable: same edition, same printed folios. A different edition indexes fine but
 its page numbers no longer match the aids — re-derive that book's map, and say
 so rather than citing aid page numbers that point elsewhere.
 
-There is no download path for a book, and `fetch_book.py` (present in some
-copies, absent from others) cannot supply one — it reads a `drive_file_id`
-this build deliberately omits, and exits saying so. That is correct, not a
-bug to route around. The operator's own PDF is the only way a book arrives.
+`fetch_book.py` ships, but whether it can do anything is a property of the
+CORPUS, not of the install: it re-downloads a book from the `drive_file_id`
+in that book's `meta.json`, and a corpus assembled from this repo's aids has
+no `meta.json` at all until the operator indexes something. It is therefore
+inert for a fresh install — it exits saying the id is missing, which is
+correct and not a bug to route around — and useful only to an operator whose
+own library records where their PDFs are hosted. For everyone else the
+operator's own PDF is the only way a book arrives.
 
 ## Resolving the corpus directory
 
