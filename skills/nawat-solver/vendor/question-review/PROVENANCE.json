@@ -16,7 +16,7 @@
     },
     "scripts/check_sourcing.py": {
       "source": ".claude/skills/question-review/scripts/check_sourcing.py",
-      "sha256": "6e373bebe6241251daeaf9ebe93bfe7ef83f0cbaeebc8a801f51c7b555ead5c9",
+      "sha256": "d036ce575d6c60dd20de7331948755918a2e49ed3640f49d4b586a4bc0620645",
       "stamped": true
     },
     "scripts/check_term_consistency.py": {

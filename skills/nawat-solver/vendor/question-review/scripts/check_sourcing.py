@@ -1,6 +1,6 @@
 # --- VENDORED COPY - DO NOT EDIT ------------------------------------
 # source : .claude/skills/question-review/scripts/check_sourcing.py   (sawab repo - the source of truth)
-# sha256 : 6e373bebe6241251daeaf9ebe93bfe7ef83f0cbaeebc8a801f51c7b555ead5c9
+# sha256 : d036ce575d6c60dd20de7331948755918a2e49ed3640f49d4b586a4bc0620645
 # synced : 2026-08-28 by tools/sync_from_sawab.py
 # Edit the sawab original, not this file. `sync_from_sawab.py --check`
 # fails when the two have drifted apart.
@@ -41,10 +41,15 @@ EXPLANATION_FIELDS = ["Why", "Reasons Wrong Answers Are Wrong", "Take-Home Messa
 CONTEXT_FIELDS = ["Reformatted Question", "Choice A", "Choice B", "Choice C", "Choice D", "Choice E"]
 
 # A number is a claim only when it carries a clinical unit or is a percentage.
-UNIT = (r"%|mg/dL|g/dL|mg/kg|mcg|µg|mg|mL/kg|mL|L/min|L|mEq/L|mEq|mmol/L|mmol|mOsm|"
+UNIT = (r"%|mg/dL|g/dL|mg/L|g/L|mg/kg|mcg|µg|mg|mL/kg|mL|L/min|L|mEq/L|mEq|mmol/L|mmol|mOsm|"
         r"U/L|IU|ng/mL|pg/mL|cm|mm Hg|mmHg|mm|°C|°F|kg|hours|hour|days|day|weeks|week|"
         r"months|month|years|year|minutes|min|Gy|Fr")
-NUMBER = re.compile(r"(?<![\w.])(\d{1,3}(?:,\d{3})*(?:\.\d+)?)\s*(" + UNIT + r")\b")
+# The trailing guard stops a unit matching the start of a longer word ("5 L" in
+# "5 Later"). It must be (?!\w) and NOT \b: after a non-word unit character like
+# "%", \b only holds when a word character follows, so "41% of patients" failed
+# to match while "41%of" succeeded. Percentages are the commonest figure in an
+# explanation, and every one of them was passing this check unexamined.
+NUMBER = re.compile(r"(?<![\w.])(\d{1,3}(?:,\d{3})*(?:\.\d+)?)\s*(" + UNIT + r")(?!\w)")
 YEARISH = re.compile(r"^(19|20)\d{2}$")
 
 
@@ -65,7 +70,11 @@ def numbers_in(text):
             continue
         if val <= 1:                     # "1 dose", "0.5 mg" carry little claim
             continue
-        out.setdefault(raw.rstrip("0").rstrip(".") or raw, m.group(0).strip())
+        # Normalise 7.50 -> 7.5, but ONLY across a decimal point: stripping
+        # zeros from an integer turned 50 into 5 and 100 into 1, so a "50%"
+        # claim counted as sourced by any unrelated 5 in the passage.
+        key = raw.rstrip("0").rstrip(".") if "." in raw else raw
+        out.setdefault(key or raw, m.group(0).strip())
     return out
 
 
