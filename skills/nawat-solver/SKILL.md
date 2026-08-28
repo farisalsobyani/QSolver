@@ -68,10 +68,10 @@ usable: same edition, same printed folios. A different edition indexes fine but
 its page numbers no longer match the aids — re-derive that book's map, and say
 so rather than citing aid page numbers that point elsewhere.
 
-`fetch_book.py` cannot help here — it reads a `drive_file_id` that this build
-deliberately omits. It stays in the tree for operators who maintain their own
-library with their own hosting; against this corpus it exits with that
-message, which is correct, not a bug to route around.
+There is no download path for a book, and `fetch_book.py` (present in some
+copies, absent from others) cannot supply one — it reads a `drive_file_id`
+this build deliberately omits, and exits saying so. That is correct, not a
+bug to route around. The operator's own PDF is the only way a book arrives.
 
 ## Resolving the corpus directory
 

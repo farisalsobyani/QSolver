@@ -114,11 +114,13 @@ American spelling, abbreviation policy, sourcing of every precise number, and
 one-entity-one-spelling. They are **copies**; the originals live in a private
 repo that is their source of truth.
 
-A copy is a second truth that drifts, so nothing here relies on remembering to
+A copy is a second truth that drifts, so nothing relies on remembering to
 re-copy them: `tools/sync_from_sawab.py --check` hashes each vendored file
 against what it was copied from and exits non-zero when they diverge — in
-either direction, upstream change or local edit. Don't edit anything under
-`vendor/`; fix the original and re-sync.
+either direction, upstream change or local edit. That tool needs the private
+original, so it lives upstream and may not be in your copy; either way, don't
+edit anything under `vendor/` — a fix belongs in the original and reaches you
+through a re-sync.
 
 Two rules could not be vendored because they read a private application's
 source. Their absence is stated in `SKILL.md` and the skill degrades loudly
