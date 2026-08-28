@@ -27,6 +27,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import shutil
 import sqlite3
@@ -36,6 +37,16 @@ import pymupdf
 
 from derive_folios import (derive as derive_page_folios, edge_candidates,
                            is_reflowed)
+
+
+def default_corpus() -> str:
+    """The corpus directory to use when --corpus is not given.
+
+    $NAWAT_CORPUS lets an operator keep one library outside whatever directory
+    they happen to be running from; ./corpus stays the default so a checkout
+    with a corpus in it needs no setup at all.
+    """
+    return os.environ.get('NAWAT_CORPUS') or 'corpus'
 
 
 def extract_with_pdf_inspector(pdf_path: Path, page_count: int) -> tuple[list[str], list[int]] | None:
@@ -212,9 +223,12 @@ def main() -> int:
                         'string for this book (src/lib/referenceStandardize.ts)')
     p.add_argument('--edition', default='', help='e.g. "20th Edition"')
     p.add_argument('--year', default='', help='4-digit publication year')
-    p.add_argument('--corpus', default='corpus')
-    p.add_argument('--priority', type=int, default=100,
+    p.add_argument('--corpus', default=default_corpus(),
+                   help='corpus directory (default: $NAWAT_CORPUS, else ./corpus)')
+    p.add_argument('--priority', type=int, default=None,
                    help='citation/retrieval priority; LOWER = preferred (1 = primary reference). '
+                        'Defaults to the value already in library.json, so re-indexing '
+                        'keeps a book where the library put it; 100 for a new book. '
                         'Editable later in corpus/library.json without re-indexing.')
     p.add_argument('--drive-id', default='',
                    help='Google Drive file id of the source PDF (drive-fetch storage model: '
@@ -303,10 +317,18 @@ def main() -> int:
     # Register in the library.
     lib_path = corpus / 'library.json'
     library = json.loads(lib_path.read_text(encoding='utf-8')) if lib_path.exists() else {'books': {}}
+    # Re-indexing a book must not silently demote it. The shipped library sets a
+    # deliberate order (Schwartz first, then Sabiston, ...) that decides which
+    # book a tie cites; overwriting it with the default would flatten every book
+    # to equal rank and nothing would report that it had happened.
+    existing = library['books'].get(args.book_id, {})
+    priority = args.priority if args.priority is not None else existing.get('priority', 100)
+    if existing.get('priority') is not None and priority != existing['priority']:
+        print(f'note: priority {existing["priority"]} -> {priority} for {args.book_id}')
     library['books'][args.book_id] = {
         'title': args.title, 'edition': args.edition, 'year': args.year,
         'pages': len(doc), 'map': (book_dir / 'map.md').exists(),
-        'priority': args.priority,
+        'priority': priority,
     }
     lib_path.write_text(json.dumps(library, indent=2), encoding='utf-8')
 

@@ -27,9 +27,20 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sqlite3
 from pathlib import Path
+
+
+def default_corpus() -> str:
+    """The corpus directory to use when --corpus is not given.
+
+    $NAWAT_CORPUS lets an operator keep one library outside whatever directory
+    they happen to be running from; ./corpus stays the default so a checkout
+    with a corpus in it needs no setup at all.
+    """
+    return os.environ.get('NAWAT_CORPUS') or 'corpus'
 
 
 def fts_query(raw: str) -> str:
@@ -72,7 +83,8 @@ def main() -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('query')
     p.add_argument('--book', default=None, help='book id; searches every indexed book when omitted')
-    p.add_argument('--corpus', default='corpus')
+    p.add_argument('--corpus', default=default_corpus(),
+                   help='corpus directory (default: $NAWAT_CORPUS, else ./corpus)')
     p.add_argument('--limit', type=int, default=8)
     p.add_argument('--json', action='store_true')
     args = p.parse_args()

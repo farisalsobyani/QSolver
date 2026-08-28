@@ -55,12 +55,18 @@ plainly and stop — do not solve from memory and dress it in citations. A
 question answered without an opened page is exactly what the verification
 gates exist to prevent.
 
-To install a book, the operator supplies the PDF and you index it (see
-"Indexing" below). Match the edition in `library.json` — same edition means
-the printed folios line up with the shipped `map.md` and `concept-index.md`,
-so all the routing works immediately. A different edition still indexes fine,
-but its page numbers no longer match the aids: re-derive the map for that
-book, and say so rather than citing aid page numbers that point elsewhere.
+**To install books, send the operator to `tools/add_book.py <dir>` in the
+QSolver checkout** rather than composing an `index_textbook.py` command
+yourself. It identifies each PDF by page count against `library.json`, supplies
+the exact title/edition/year that citations and the shipped maps depend on, and
+refuses a file whose page count and filename disagree. Hand-indexing is for a
+book the library does not know — then the metadata is yours to choose, and you
+should say so rather than implying it is the bank's canonical string.
+
+Matching the edition is what makes the shipped `map.md` and `concept-index.md`
+usable: same edition, same printed folios. A different edition indexes fine but
+its page numbers no longer match the aids — re-derive that book's map, and say
+so rather than citing aid page numbers that point elsewhere.
 
 `fetch_book.py` cannot help here — it reads a `drive_file_id` that this build
 deliberately omits. It stays in the tree for operators who maintain their own

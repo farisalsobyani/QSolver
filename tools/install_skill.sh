@@ -44,11 +44,10 @@ print(f"corpus     {corpus}")
 print(f"books      {len(ready)} of {len(lib)} indexed"
       + (f": {', '.join(ready)}" if ready else " — none yet"))
 if not ready:
-    print("\nNo book is searchable yet. Index one you own:")
-    print("  python3 scripts/index_textbook.py <your.pdf> --book-id <id> \\")
-    print("      --title <exact title from library.json> --edition ... --year ... \\")
-    print(f"      --corpus {corpus}")
-    print("The id/title/edition must match library.json so the shipped maps line up.")
+    print("\nNo book is searchable yet. Point this at your PDFs:")
+    print(f"  {corpus.parent}/tools/add_book.py ~/wherever/your/textbooks/are")
+    print("It identifies each book by page count and supplies the exact title,")
+    print("edition and year the citations and the shipped maps depend on.")
 PY
 
 cat <<EOF

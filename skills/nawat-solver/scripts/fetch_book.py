@@ -20,9 +20,20 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
+
+
+def default_corpus() -> str:
+    """The corpus directory to use when --corpus is not given.
+
+    $NAWAT_CORPUS lets an operator keep one library outside whatever directory
+    they happen to be running from; ./corpus stays the default so a checkout
+    with a corpus in it needs no setup at all.
+    """
+    return os.environ.get('NAWAT_CORPUS') or 'corpus'
 
 
 def fetch(book_id: str, corpus: Path, force: bool) -> bool:
@@ -60,7 +71,8 @@ def main() -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('book_id', nargs='?')
     p.add_argument('--all', action='store_true')
-    p.add_argument('--corpus', default='corpus')
+    p.add_argument('--corpus', default=default_corpus(),
+                   help='corpus directory (default: $NAWAT_CORPUS, else ./corpus)')
     p.add_argument('--force', action='store_true')
     args = p.parse_args()
 

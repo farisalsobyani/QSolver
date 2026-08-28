@@ -35,6 +35,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import unicodedata
 from pathlib import Path
@@ -45,6 +46,16 @@ YELLOW = (1.0, 0.9, 0.2)
 
 
 # ---------------------------------------------------------------- text utils
+
+def default_corpus() -> str:
+    """The corpus directory to use when --corpus is not given.
+
+    $NAWAT_CORPUS lets an operator keep one library outside whatever directory
+    they happen to be running from; ./corpus stays the default so a checkout
+    with a corpus in it needs no setup at all.
+    """
+    return os.environ.get('NAWAT_CORPUS') or 'corpus'
+
 
 def norm_word(w: str) -> str:
     w = unicodedata.normalize('NFKD', w)
@@ -218,7 +229,8 @@ def render(args, doc: pymupdf.Document, meta: dict, pdf_index: int,
 
 def main() -> int:
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument('--corpus', default='corpus')
+    p.add_argument('--corpus', default=default_corpus(),
+                   help='corpus directory (default: $NAWAT_CORPUS, else ./corpus)')
     p.add_argument('--book', required=True)
     p.add_argument('--page', default=None, help='display page label (as printed in the book)')
     p.add_argument('--pdf-page', type=int, default=None, help='1-based raw PDF page index')

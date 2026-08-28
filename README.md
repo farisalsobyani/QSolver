@@ -17,7 +17,8 @@ felt.
 skills/nawat-solver/     the skill: SKILL.md, 3 reference prompts, 9 scripts
   vendor/question-review/  4 export-time style checkers (see "Vendored rules")
 corpus/                  retrieval aids only — no textbook content
-tools/sync_from_sawab.py drift check for the vendored checkers
+tools/                   add_book.py (index your PDFs), install_skill.sh,
+                         sync_from_sawab.py (drift check for the checkers)
 ```
 
 **`corpus/` ships without any textbook text.** It contains the routing layer —
@@ -52,25 +53,38 @@ pip install pdf-inspector              # optional, better extraction quality
 ~/.nawat-lib/tools/install_skill.sh    # symlinks the skill into ~/.claude/skills/
 ```
 
-Then index a book you own:
+Then point it at your textbooks:
 
 ```bash
-python3 ~/.claude/skills/nawat-solver/scripts/index_textbook.py ~/books/sabiston.pdf \
-  --book-id sabiston-20e \
-  --title "Sabiston Textbook of Surgery. The Biological Basis of Modern Surgical Practice" \
-  --edition "20th Edition" --year 2017 \
-  --corpus ~/.nawat-lib/corpus
+~/.nawat-lib/tools/add_book.py ~/wherever/your/textbooks/are
 ```
 
-Use the `book-id`, title, edition and year exactly as `corpus/library.json`
-records them. **Match the edition** and the printed page numbers in the shipped
-maps line up with your copy, so the routing works from the first question. A
-different edition indexes fine but its folios won't match the aids — the skill
-will tell you so rather than citing page numbers that point somewhere else.
+It searches the directory, works out which book each PDF is, shows you the
+plan, and indexes the ones it recognizes after you confirm. Identification is
+by **page count**, which `library.json` records per book — a sharp signal that
+separates not just the six books but their editions, so a 21st-edition Sabiston
+is caught rather than quietly indexed under the 20th's maps. The filename is a
+second opinion only, and when the two disagree the file is reported, not
+guessed at. Getting this right matters because the title, edition and year are
+copied verbatim into every citation, and the shipped maps' page numbers are
+only correct for the edition they were written against.
+
+Indexing is CPU-bound text extraction and it is not quick: measured at about
+**0.21 s per page** (1,699 pages in 5m56s, PyMuPDF path, `pdf-inspector`
+absent). So roughly 4 minutes for the ASCRS text, 8 for Schwartz, and ~29 for
+Fischer's 8,141 pages — a bit over an hour for all six. `add_book.py` prints
+an estimate per book and for the batch before it starts. Do the one or two
+books you actually want first; you can add the rest later.
+
+Installing `pdf-inspector` (optional) changes the extractor and gives better
+multi-column reading order; the timing above is without it. PDFs are read where
+they are, not copied into the corpus — the six together are ~2.3 GB.
 
 You do not need all six books. One is enough to start; the skill checks what is
 actually installed before it searches, and says so plainly when a topic's
-preferred book is missing.
+preferred book is missing. A book that isn't one of the six can still be
+indexed with `scripts/index_textbook.py` directly, supplying your own title and
+edition — you would then want to write it a `map.md` too.
 
 Ask Claude Code to "solve these questions" with a PDF, image, spreadsheet, or
 pasted text, and the skill takes over from there.
