@@ -28,6 +28,15 @@ recommended before indexing a book (`pip install pdf-inspector`): indexing
 prefers it for extraction (multi-column reading order, markdown heading
 structure that feeds the semantic map, per-page OCR routing with
 broken-encoding detection) and falls back to PyMuPDF without it.
+**Check `pdf-inspector` is installed before indexing into an existing corpus.**
+Every book in the shipped library was built with it, and the fallback is silent:
+the run succeeds and that one book simply gets worse text — different reading
+order, no heading structure — inside a library whose `map.md` and
+`concept-index.md` were written against the better extraction. If `import
+pdf_inspector` fails, say so and offer the offline install
+(`pip install --no-index --find-links vendor/wheels pdf-inspector`) rather than
+indexing anyway. A book's `meta.json:extractor` records what actually built it,
+so a mixed corpus stays diagnosable after the fact.
 `rapidfuzz` is also optional but recommended (`pip install rapidfuzz`):
 fuzzy quote verification uses it for fast edit distance on real textbook
 pages, with a pure-Python fallback when absent.

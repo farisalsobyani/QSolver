@@ -50,10 +50,23 @@ if not ready:
     print("edition and year the citations and the shipped maps depend on.")
 PY
 
+python3 - "$REPO" <<'DEPS'
+import importlib.util, pathlib, sys
+repo = pathlib.Path(sys.argv[1])
+missing = [m for m in ("pymupdf", "rapidfuzz") if not importlib.util.find_spec(m)]
+if missing:
+    req = "   (pymupdf is required)" if "pymupdf" in missing else ""
+    print(f"\nmissing   {', '.join(missing)} - pip install {' '.join(missing)}{req}")
+if not importlib.util.find_spec("pdf_inspector"):
+    print("\npdf-inspector is not installed. Every book in this corpus was")
+    print("extracted with it, so indexing a NEW book without it gives that book")
+    print("worse text than the rest - see vendor/wheels/README.md. Not needed to")
+    print("use the corpus as shipped. Install offline from the bundled wheels:")
+    print(f"  pip install --no-index --find-links {repo}/vendor/wheels pdf-inspector")
+DEPS
+
 cat <<EOF
 
 The skill finds this checkout's corpus on its own — nothing to export.
 (Keeping your library somewhere else? export NAWAT_CORPUS=/that/path)
-
-Missing dependency? pip install pymupdf rapidfuzz
 EOF

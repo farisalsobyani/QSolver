@@ -1,0 +1,10 @@
+# pymupdf is REQUIRED: page extraction, quote verification, evidence rendering.
+pymupdf>=1.24
+# Optional, both worth having:
+#   rapidfuzz      — fast edit distance for fuzzy quote matching (pure-Python
+#                    fallback exists, just slower on real textbook pages)
+#   pdf-inspector  — the extractor every book in this corpus was built with.
+#                    Only needed to INDEX a book; see vendor/wheels/README.md
+#                    for why matching it matters, and for an offline install.
+rapidfuzz>=3.0
+pdf-inspector>=1.17

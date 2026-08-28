@@ -48,8 +48,7 @@ Requires Python 3.9+ and PyMuPDF.
 
 ```bash
 git clone https://github.com/farisalsobyani/QSolver ~/.nawat-lib
-pip install pymupdf rapidfuzz          # rapidfuzz optional, recommended
-pip install pdf-inspector              # optional, better extraction quality
+pip install -r QSolver/requirements.txt   # no network? see vendor/wheels/README.md
 ~/.nawat-lib/tools/install_skill.sh    # symlinks the skill into ~/.claude/skills/
                                        # no NAWAT_CORPUS to export - see below
 ```
