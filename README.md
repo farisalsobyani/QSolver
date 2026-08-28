@@ -49,7 +49,7 @@ Requires Python 3.9+ and PyMuPDF.
 git clone https://github.com/farisalsobyani/QSolver ~/.nawat-lib
 pip install pymupdf rapidfuzz          # rapidfuzz optional, recommended
 pip install pdf-inspector              # optional, better extraction quality
-~/.nawat-lib/tools/install_skill.sh    # copies the skill into ~/.claude/skills/
+~/.nawat-lib/tools/install_skill.sh    # symlinks the skill into ~/.claude/skills/
 ```
 
 Then index a book you own:
@@ -118,6 +118,11 @@ here.
 The useful thing to contribute is a **map** — if you index a book and write a
 good `corpus/<book>/map.md`, or improve one, send it. Everything derived from a
 PDF is gitignored, so an accidental `git add -A` won't commit a textbook.
+
+The installed skill is a symlink into this checkout, so `git pull` updates it
+in place — no reinstall, and any prompt you edit is an edit git can show you.
+Moving or deleting the checkout breaks the link; re-run `install_skill.sh` to
+repair it.
 
 Note that indexing rewrites `corpus/library.json` with local page counts, which
 will show as a local modification; `git checkout corpus/library.json` before
