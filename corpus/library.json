@@ -1,0 +1,52 @@
+{
+  "books": {
+    "sabiston-20e": {
+      "title": "Sabiston Textbook of Surgery. The Biological Basis of Modern Surgical Practice",
+      "edition": "20th Edition",
+      "year": "2017",
+      "pages": 2136,
+      "map": true,
+      "priority": 2
+    },
+    "schwartz-11e": {
+      "title": "Schwartz’s Principles of Surgery",
+      "edition": "11th Edition",
+      "year": "2019",
+      "pages": 2319,
+      "map": true,
+      "priority": 1
+    },
+    "mulholland-greenfield-7e": {
+      "title": "Greenfield’s Surgery: Scientific Principles & Practice",
+      "edition": "7th Edition",
+      "year": "2023",
+      "pages": 6293,
+      "map": true,
+      "priority": 6
+    },
+    "current-surgical-therapy-14e": {
+      "title": "Current Surgical Therapy",
+      "edition": "14th Edition",
+      "year": "2023",
+      "pages": 1699,
+      "map": true,
+      "priority": 3
+    },
+    "ascrs-colon-rectal-4e": {
+      "title": "The ASCRS Textbook of Colon and Rectal Surgery",
+      "edition": "4th Edition",
+      "year": "2022",
+      "pages": 1198,
+      "map": true,
+      "priority": 5
+    },
+    "fischer-mastery-7e": {
+      "title": "Fischer’s Mastery of Surgery",
+      "edition": "7th Edition",
+      "year": "2019",
+      "pages": 8141,
+      "map": true,
+      "priority": 4
+    }
+  }
+}

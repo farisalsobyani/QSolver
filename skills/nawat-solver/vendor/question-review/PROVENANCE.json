@@ -1,0 +1,43 @@
+{
+  "note": "Vendored from the sawab repo. That repo is the source of truth; these copies exist so the public skill can run its export checks without it. Re-sync with tools/sync_from_sawab.py.",
+  "source_repo": "farisalsobyani/sawab",
+  "source_skill": ".claude/skills/question-review",
+  "synced": "2026-08-28",
+  "files": {
+    "scripts/check_choice_style.py": {
+      "source": ".claude/skills/question-review/scripts/check_choice_style.py",
+      "sha256": "cb95e01661ab74962d8437762d8c93157a891b572984dd4f4bbb5b74a15e20df",
+      "stamped": true
+    },
+    "scripts/check_prose_style.py": {
+      "source": ".claude/skills/question-review/scripts/check_prose_style.py",
+      "sha256": "3c874838d6a93d0e57a265666a2735b88004a18892e938ee4377551e054f50d8",
+      "stamped": true
+    },
+    "scripts/check_sourcing.py": {
+      "source": ".claude/skills/question-review/scripts/check_sourcing.py",
+      "sha256": "6e373bebe6241251daeaf9ebe93bfe7ef83f0cbaeebc8a801f51c7b555ead5c9",
+      "stamped": true
+    },
+    "scripts/check_term_consistency.py": {
+      "source": ".claude/skills/question-review/scripts/check_term_consistency.py",
+      "sha256": "0e4d55fd509fd9367b04bb3f151851275019866f5f85afc7f6183b74b9be7c6b",
+      "stamped": true
+    },
+    "scripts/qr_common.py": {
+      "source": ".claude/skills/question-review/scripts/qr_common.py",
+      "sha256": "25b1da1ffe81e0fe979b2162b6de0ed2f57d92b44d27eedf75552e3f5bb813c5",
+      "stamped": true
+    },
+    "reference/abbreviations.json": {
+      "source": ".claude/skills/question-review/reference/abbreviations.json",
+      "sha256": "2b2f3828e0278e339ac21a665d939cae5878affacd4ce767095026efa2237ed6",
+      "stamped": false
+    },
+    "reference/term_exceptions.json": {
+      "source": ".claude/skills/question-review/reference/term_exceptions.json",
+      "sha256": "1166b08deef4b5d40fe8c6628a2d1fde633f63222deeb5872e26d6e855320703",
+      "stamped": false
+    }
+  }
+}

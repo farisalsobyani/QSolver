@@ -1,0 +1,17 @@
+# A book you index is YOURS. Nothing derived from a textbook PDF is tracked
+# here — not the page text, not the search index, not the PDF. See README.
+corpus/*/pages/
+corpus/*/meta.json
+corpus/*/fts.sqlite
+corpus/*/*.pdf
+corpus/*/source.*
+
+# Your duplicate-scan history is local too.
+corpus/ledger.jsonl
+
+# Solver output.
+runs/
+
+__pycache__/
+*.pyc
+.DS_Store

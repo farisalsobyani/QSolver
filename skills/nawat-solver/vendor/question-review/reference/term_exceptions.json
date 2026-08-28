@@ -1,0 +1,12 @@
+{
+ "_note": "Families deliberately kept distinct — check_term_consistency skips any family whose variant set matches one of these. Add to this rather than rejecting the same card on every run.",
+ "keep_distinct": [
+  {
+   "variants": [
+    "Essential fatty acids",
+    "Add essential fatty acids"
+   ],
+   "why": "parallel form is per-question: 'Add …' beside 'Add zinc/iron/copper', bare beside 'Zinc/Vitamin C/Selenium'"
+  }
+ ]
+}
