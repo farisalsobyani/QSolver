@@ -33,20 +33,12 @@ import shutil
 import sqlite3
 from pathlib import Path
 
+from _common import find_corpus
+
 import pymupdf
 
 from derive_folios import (derive as derive_page_folios, edge_candidates,
                            is_reflowed)
-
-
-def default_corpus() -> str:
-    """The corpus directory to use when --corpus is not given.
-
-    $NAWAT_CORPUS lets an operator keep one library outside whatever directory
-    they happen to be running from; ./corpus stays the default so a checkout
-    with a corpus in it needs no setup at all.
-    """
-    return os.environ.get('NAWAT_CORPUS') or 'corpus'
 
 
 def extract_with_pdf_inspector(pdf_path: Path, page_count: int) -> tuple[list[str], list[int]] | None:
@@ -223,8 +215,8 @@ def main() -> int:
                         'string for this book (src/lib/referenceStandardize.ts)')
     p.add_argument('--edition', default='', help='e.g. "20th Edition"')
     p.add_argument('--year', default='', help='4-digit publication year')
-    p.add_argument('--corpus', default=default_corpus(),
-                   help='corpus directory (default: $NAWAT_CORPUS, else ./corpus)')
+    p.add_argument('--corpus', default=find_corpus(),
+                   help='corpus directory (default: found automatically - $NAWAT_CORPUS, ./corpus, or the one beside the skill)')
     p.add_argument('--priority', type=int, default=None,
                    help='citation/retrieval priority; LOWER = preferred (1 = primary reference). '
                         'Defaults to the value already in library.json, so re-indexing '

@@ -75,17 +75,24 @@ bug to route around. The operator's own PDF is the only way a book arrives.
 
 ## Resolving the corpus directory
 
-The skill runs anywhere; only the library is directory-hosted. Resolve in
-this order:
-1. `./corpus` in the current working directory.
-2. `$NAWAT_CORPUS` if set (absolute path to a corpus directory).
-3. Otherwise the QSolver checkout this skill was installed from — its
-   `corpus/` is the default library. Clone it once into a cache if it isn't
-   already local:
-   `git clone --depth 1 https://github.com/farisalsobyani/QSolver ~/.nawat-lib`
-   (or `git -C ~/.nawat-lib pull` if it exists), then pass
-   `--corpus ~/.nawat-lib/corpus` to every script. The repo is public — no
-   credentials needed.
+**The scripts find the library themselves — do not pass `--corpus` unless you
+have a reason to.** `_common.find_corpus()` resolves it in this order:
+1. `$NAWAT_CORPUS`, if it points at a directory holding `library.json`. When
+   it is set but wrong, the scripts warn on stderr and keep looking rather
+   than searching an empty library in silence.
+2. `./corpus` in the current working directory.
+3. A `corpus/` beside the installed skill — found by walking up from the
+   script's own resolved path, which passes through the `~/.claude/skills`
+   symlink into the checkout the skill was installed from. This is the case
+   that needs no configuration at all.
+A directory counts only if it holds `library.json`, so a stray folder named
+`corpus` cannot shadow the real one. An explicit `--corpus` outranks all of it.
+
+If the skill was COPIED into `~/.claude/skills` rather than symlinked, step 3
+finds nothing and the fallback is a bare `./corpus` — that is when the operator
+needs `$NAWAT_CORPUS` or an explicit flag. Clone the public library if they
+have none:
+`git clone --depth 1 https://github.com/farisalsobyani/QSolver ~/.nawat-lib`.
 Run outputs go to `runs/<date>-<batch>/` under the CURRENT working
 directory regardless of where the corpus lives.
 

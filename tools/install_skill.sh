@@ -52,9 +52,8 @@ PY
 
 cat <<EOF
 
-Add this to your shell profile so the skill finds the library:
-
-  export NAWAT_CORPUS="$REPO/corpus"
+The skill finds this checkout's corpus on its own — nothing to export.
+(Keeping your library somewhere else? export NAWAT_CORPUS=/that/path)
 
 Missing dependency? pip install pymupdf rapidfuzz
 EOF

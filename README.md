@@ -51,6 +51,7 @@ git clone https://github.com/farisalsobyani/QSolver ~/.nawat-lib
 pip install pymupdf rapidfuzz          # rapidfuzz optional, recommended
 pip install pdf-inspector              # optional, better extraction quality
 ~/.nawat-lib/tools/install_skill.sh    # symlinks the skill into ~/.claude/skills/
+                                       # no NAWAT_CORPUS to export - see below
 ```
 
 Then point it at your textbooks:
@@ -134,6 +135,12 @@ here.
 The useful thing to contribute is a **map** — if you index a book and write a
 good `corpus/<book>/map.md`, or improve one, send it. Everything derived from a
 PDF is gitignored, so an accidental `git add -A` won't commit a textbook.
+
+The symlink is also why there is nothing to configure: each script resolves
+its own real path through the link and walks up to the `corpus/` that shipped
+beside it. Set `NAWAT_CORPUS` only if your library lives somewhere else, and
+pass `--corpus` only to override both. A directory has to contain
+`library.json` to count, so a stray `corpus` folder cannot shadow the real one.
 
 The installed skill is a symlink into this checkout, so `git pull` updates it
 in place — no reinstall, and any prompt you edit is an edit git can show you.

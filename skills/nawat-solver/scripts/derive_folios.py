@@ -61,6 +61,8 @@ import sqlite3
 import sys
 from pathlib import Path
 
+from _common import find_corpus
+
 BARE_NUM = re.compile(r'^(\d{1,4})$')
 EDGE_LINES = 2      # folios sit on the first or last line of a page
 LOOKAHEAD = 12      # how far to look when testing a candidate new offset
@@ -69,16 +71,6 @@ MIN_CONFIRMED_FRACTION = 0.5   # below this (but above zero) the read is suspect
 MARGIN_BAND = 0.09             # outer fraction of page height that holds furniture
 REFLOW_SAMPLE = 300            # pages sampled when asking "is this a reflow?"
 REFLOW_MAX_MARGIN_FRACTION = 0.02
-
-
-def default_corpus() -> str:
-    """The corpus directory to use when --corpus is not given.
-
-    $NAWAT_CORPUS lets an operator keep one library outside whatever directory
-    they happen to be running from; ./corpus stays the default so a checkout
-    with a corpus in it needs no setup at all.
-    """
-    return os.environ.get('NAWAT_CORPUS') or 'corpus'
 
 
 def edge_candidates(text: str) -> set[int]:
@@ -288,8 +280,8 @@ def main() -> int:
     ap.add_argument('--all', action='store_true', help='every book in --from-sqlite')
     ap.add_argument('--map', action='append', default=[],
                     help='sqlite-key=book-id, repeatable, for --all')
-    ap.add_argument('--corpus', default=default_corpus(),
-                   help='corpus directory (default: $NAWAT_CORPUS, else ./corpus)')
+    ap.add_argument('--corpus', default=find_corpus(),
+                   help='corpus directory (default: found automatically - $NAWAT_CORPUS, ./corpus, or the one beside the skill)')
     ap.add_argument('--check', action='store_true', help='report only; write nothing')
     ap.add_argument('--force', action='store_true',
                     help='write even when the confirmation rate looks like a bad read')

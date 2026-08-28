@@ -72,7 +72,48 @@ Citation format (locked): "Title, Edition, Year, Page N."  /  "Pages N, M."
 from __future__ import annotations
 
 import json
+import os
+import sys
 from pathlib import Path
+
+
+def _is_corpus(path: Path) -> bool:
+    """A corpus is a directory holding library.json — nothing else counts.
+
+    Without this test any directory happening to be named `corpus` could
+    shadow the real library and searches would come back empty for reasons
+    nobody could see.
+    """
+    try:
+        return path.is_dir() and (path / 'library.json').is_file()
+    except OSError:
+        return False
+
+
+def find_corpus() -> str:
+    """Locate the textbook library without being told where it is.
+
+    Order: $NAWAT_CORPUS, then ./corpus where the operator is standing, then a
+    corpus/ beside the installed skill. The last one is what makes setup
+    zero-config: resolve() follows the ~/.claude/skills symlink back into the
+    checkout, so walking up from this file reaches the corpus that shipped
+    with it. Falls back to 'corpus' so index_textbook.py can create one.
+
+    An explicit --corpus always outranks all of this.
+    """
+    env = os.environ.get('NAWAT_CORPUS')
+    if env:
+        candidate = Path(env).expanduser()
+        if _is_corpus(candidate):
+            return str(candidate)
+        print(f'warning: $NAWAT_CORPUS={env} holds no library.json — ignoring it',
+              file=sys.stderr)
+    if _is_corpus(Path('corpus')):
+        return 'corpus'
+    for parent in Path(__file__).resolve().parents:
+        if _is_corpus(parent / 'corpus'):
+            return str(parent / 'corpus')
+    return 'corpus'
 
 
 def load_entries(run_dir: Path) -> list[dict]:
